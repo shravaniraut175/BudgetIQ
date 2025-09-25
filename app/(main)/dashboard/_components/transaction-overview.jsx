@@ -1,3 +1,388 @@
+// "use client";
+
+// import { useState } from "react";
+// import {
+//   PieChart,
+//   Pie,
+//   Cell,
+//   ResponsiveContainer,
+//   Tooltip,
+//   Legend,
+// } from "recharts";
+// import { format } from "date-fns";
+// import { ArrowUpRight, ArrowDownRight } from "lucide-react";
+
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// import { cn } from "@/lib/utils";
+
+// const COLORS = [
+//   "#FF6B6B",
+//   "#4ECDC4",
+//   "#45B7D1",
+//   "#96CEB4",
+//   "#FFEEAD",
+//   "#D4A5A5",
+//   "#9FA8DA",
+// ];
+
+// export function DashboardOverview({ accounts, transactions }) {
+//   const [selectedAccountId, setSelectedAccountId] = useState(
+//     accounts.find((a) => a.isDefault)?.id || accounts[0]?.id
+//   );
+
+//   // Filter transactions for selected account
+//   const accountTransactions = transactions.filter(
+//     (t) => t.accountId === selectedAccountId
+//   );
+
+//   // Get recent transactions (last 5)
+//   const recentTransactions = accountTransactions
+//     .sort((a, b) => new Date(b.date) - new Date(a.date))
+//     .slice(0, 5);
+
+//   // Calculate expense breakdown for current month
+//   const currentDate = new Date();
+//   const currentMonthExpenses = accountTransactions.filter((t) => {
+//     const transactionDate = new Date(t.date);
+//     return (
+//       t.type === "EXPENSE" &&
+//       transactionDate.getMonth() === currentDate.getMonth() &&
+//       transactionDate.getFullYear() === currentDate.getFullYear()
+//     );
+//   });
+
+//   // Group expenses by category
+//   const expensesByCategory = currentMonthExpenses.reduce((acc, transaction) => {
+//     const category = transaction.category;
+//     if (!acc[category]) {
+//       acc[category] = 0;
+//     }
+//     acc[category] += transaction.amount;
+//     return acc;
+//   }, {});
+
+//   // Format data for pie chart
+//   const pieChartData = Object.entries(expensesByCategory).map(
+//     ([category, amount]) => ({
+//       name: category,
+//       value: amount,
+//     })
+//   );
+
+//   return (
+//     <div className="grid gap-4 md:grid-cols-2">
+//       {/* Recent Transactions Card */}
+//       <Card>
+//         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+//           <CardTitle className="text-base font-normal">
+//             Recent Transactions
+//           </CardTitle>
+//           <Select
+//             value={selectedAccountId}
+//             onValueChange={setSelectedAccountId}
+//           >
+//             <SelectTrigger className="w-[140px]">
+//               <SelectValue placeholder="Select account" />
+//             </SelectTrigger>
+//             <SelectContent>
+//               {accounts.map((account) => (
+//                 <SelectItem key={account.id} value={account.id}>
+//                   {account.name}
+//                 </SelectItem>
+//               ))}
+//             </SelectContent>
+//           </Select>
+//         </CardHeader>
+//         <CardContent>
+//           <div className="space-y-4">
+//             {recentTransactions.length === 0 ? (
+//               <p className="text-center text-muted-foreground py-4">
+//                 No recent transactions
+//               </p>
+//             ) : (
+//               recentTransactions.map((transaction) => (
+//                 <div
+//                   key={transaction.id}
+//                   className="flex items-center justify-between"
+//                 >
+//                   <div className="space-y-1">
+//                     <p className="text-sm font-medium leading-none">
+//                       {transaction.description || "Untitled Transaction"}
+//                     </p>
+//                     <p className="text-sm text-muted-foreground">
+//                       {format(new Date(transaction.date), "PP")}
+//                     </p>
+//                   </div>
+//                   <div className="flex items-center gap-2">
+//                     <div
+//                       className={cn(
+//                         "flex items-center",
+//                         transaction.type === "EXPENSE"
+//                           ? "text-red-500"
+//                           : "text-green-500"
+//                       )}
+//                     >
+//                       {transaction.type === "EXPENSE" ? (
+//                         <ArrowDownRight className="mr-1 h-4 w-4" />
+//                       ) : (
+//                         <ArrowUpRight className="mr-1 h-4 w-4" />
+//                       )}
+//                       ${transaction.amount.toFixed(2)}
+//                     </div>
+//                   </div>
+//                 </div>
+//               ))
+//             )}
+//           </div>
+//         </CardContent>
+//       </Card>
+
+//       {/* Expense Breakdown Card */}
+//       <Card>
+//         <CardHeader>
+//           <CardTitle className="text-base font-normal">
+//             Monthly Expense Breakdown
+//           </CardTitle>
+//         </CardHeader>
+//         <CardContent className="p-0 pb-5">
+//           {pieChartData.length === 0 ? (
+//             <p className="text-center text-muted-foreground py-4">
+//               No expenses this month
+//             </p>
+//           ) : (
+//             <div className="h-[300px]">
+//               <ResponsiveContainer width="100%" height="100%">
+//                 <PieChart>
+//                   <Pie
+//                     data={pieChartData}
+//                     cx="50%"
+//                     cy="50%"
+//                     outerRadius={80}
+//                     fill="#8884d8"
+//                     dataKey="value"
+//                     label={({ name, value }) => `${name}: $${value.toFixed(2)}`}
+//                   >
+//                     {pieChartData.map((entry, index) => (
+//                       <Cell
+//                         key={`cell-${index}`}
+//                         fill={COLORS[index % COLORS.length]}
+//                       />
+//                     ))}
+//                   </Pie>
+//                   <Tooltip
+//                     formatter={(value) => `$${value.toFixed(2)}`}
+//                     contentStyle={{
+//                       backgroundColor: "hsl(var(--popover))",
+//                       border: "1px solid hsl(var(--border))",
+//                       borderRadius: "var(--radius)",
+//                     }}
+//                   />
+//                   <Legend />
+//                 </PieChart>
+//               </ResponsiveContainer>
+//             </div>
+//           )}
+//         </CardContent>
+//       </Card>
+//     </div>
+//   );
+// }
+
+
+
+// "use client";
+
+// import { useState } from "react";
+// import {
+//   PieChart,
+//   Pie,
+//   Cell,
+//   ResponsiveContainer,
+//   Tooltip,
+//   Legend,
+// } from "recharts";
+// import { format } from "date-fns";
+// import { ArrowUpRight, ArrowDownRight } from "lucide-react";
+
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// import { cn } from "@/lib/utils";
+
+// const COLORS = [
+//   "#7F00FF", // Violet
+//   "#4ECDC4", // Cyan
+//   "#45B7D1", // Light Blue
+//   "#FFC300", // Yellow
+//   "#FF6B6B", // Red
+//   "#FF69B4", // Pink
+//   "#6A5ACD", // Indigo
+// ];
+
+// export function DashboardOverview({ accounts, transactions }) {
+//   const [selectedAccountId, setSelectedAccountId] = useState(
+//     accounts.find((a) => a.isDefault)?.id || accounts[0]?.id
+//   );
+
+//   const accountTransactions = transactions.filter(
+//     (t) => t.accountId === selectedAccountId
+//   );
+
+//   const recentTransactions = accountTransactions
+//     .sort((a, b) => new Date(b.date) - new Date(a.date))
+//     .slice(0, 5);
+
+//   const currentDate = new Date();
+//   const currentMonthExpenses = accountTransactions.filter((t) => {
+//     const transactionDate = new Date(t.date);
+//     return (
+//       t.type === "EXPENSE" &&
+//       transactionDate.getMonth() === currentDate.getMonth() &&
+//       transactionDate.getFullYear() === currentDate.getFullYear()
+//     );
+//   });
+
+//   const expensesByCategory = currentMonthExpenses.reduce((acc, transaction) => {
+//     const category = transaction.category;
+//     if (!acc[category]) acc[category] = 0;
+//     acc[category] += transaction.amount;
+//     return acc;
+//   }, {});
+
+//   const pieChartData = Object.entries(expensesByCategory).map(([category, amount]) => ({
+//     name: category,
+//     value: amount,
+//   }));
+
+//   return (
+//     <div className="grid gap-6 md:grid-cols-2">
+//       {/* Recent Transactions Card */}
+//       <Card className="bg-gray-800 text-gray-100 shadow-lg rounded-xl border border-gray-700 hover:shadow-xl transition-shadow duration-300">
+//         <CardHeader className="flex items-center justify-between pb-4">
+//           <CardTitle className="text-base font-semibold text-gray-200">
+//             Recent Transactions
+//           </CardTitle>
+//           <Select value={selectedAccountId} onValueChange={setSelectedAccountId}>
+//             <SelectTrigger className="w-[150px] bg-gray-700 text-gray-200 border-gray-600 focus:ring-indigo-500 focus:border-indigo-500">
+//               <SelectValue placeholder="Select account" />
+//             </SelectTrigger>
+//             <SelectContent className="bg-gray-700 text-gray-100">
+//               {accounts.map((account) => (
+//                 <SelectItem key={account.id} value={account.id}>
+//                   {account.name}
+//                 </SelectItem>
+//               ))}
+//             </SelectContent>
+//           </Select>
+//         </CardHeader>
+//         <CardContent>
+//           <div className="space-y-4">
+//             {recentTransactions.length === 0 ? (
+//               <p className="text-center text-gray-400 py-4">
+//                 No recent transactions
+//               </p>
+//             ) : (
+//               recentTransactions.map((transaction) => (
+//                 <div
+//                   key={transaction.id}
+//                   className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-700 transition-colors"
+//                 >
+//                   <div className="space-y-1">
+//                     <p className="text-sm font-medium leading-none text-gray-200">
+//                       {transaction.description || "Untitled Transaction"}
+//                     </p>
+//                     <p className="text-xs text-gray-400">
+//                       {format(new Date(transaction.date), "PP")}
+//                     </p>
+//                   </div>
+//                   <div className="flex items-center gap-2 font-medium">
+//                     <div
+//                       className={cn(
+//                         "flex items-center",
+//                         transaction.type === "EXPENSE"
+//                           ? "text-red-400"
+//                           : "text-green-400"
+//                       )}
+//                     >
+//                       {transaction.type === "EXPENSE" ? (
+//                         <ArrowDownRight className="mr-1 h-4 w-4" />
+//                       ) : (
+//                         <ArrowUpRight className="mr-1 h-4 w-4" />
+//                       )}
+//                       ${transaction.amount.toFixed(2)}
+//                     </div>
+//                   </div>
+//                 </div>
+//               ))
+//             )}
+//           </div>
+//         </CardContent>
+//       </Card>
+
+//       {/* Expense Breakdown Card */}
+//       <Card className="bg-gray-800 text-gray-100 shadow-lg rounded-xl border border-gray-700 hover:shadow-xl transition-shadow duration-300">
+//         <CardHeader>
+//           <CardTitle className="text-base font-semibold text-gray-200">
+//             Monthly Expense Breakdown
+//           </CardTitle>
+//         </CardHeader>
+//         <CardContent className="p-0 pb-5">
+//           {pieChartData.length === 0 ? (
+//             <p className="text-center text-gray-400 py-4">
+//               No expenses this month
+//             </p>
+//           ) : (
+//             <div className="h-[320px]">
+//               <ResponsiveContainer width="100%" height="100%">
+//                 <PieChart>
+//                   <Pie
+//                     data={pieChartData}
+//                     cx="50%"
+//                     cy="50%"
+//                     outerRadius={90}
+//                     dataKey="value"
+//                     label={({ name, value }) => `${name}: $${value.toFixed(2)}`}
+//                   >
+//                     {pieChartData.map((entry, index) => (
+//                       <Cell
+//                         key={`cell-${index}`}
+//                         fill={COLORS[index % COLORS.length]}
+//                       />
+//                     ))}
+//                   </Pie>
+//                   <Tooltip
+//                     formatter={(value) => `$${value.toFixed(2)}`}
+//                     contentStyle={{
+//                       backgroundColor: "hsl(var(--popover))",
+//                       border: "1px solid hsl(var(--border))",
+//                       borderRadius: "var(--radius)",
+//                       color: "#f5f5f5",
+//                     }}
+//                   />
+//                   <Legend wrapperStyle={{ color: "#f5f5f5" }} />
+//                 </PieChart>
+//               </ResponsiveContainer>
+//             </div>
+//           )}
+//         </CardContent>
+//       </Card>
+//     </div>
+//   );
+// }
+
+
 "use client";
 
 import { useState } from "react";
@@ -23,13 +408,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 const COLORS = [
-  "#FF6B6B",
-  "#4ECDC4",
-  "#45B7D1",
-  "#96CEB4",
-  "#FFEEAD",
-  "#D4A5A5",
-  "#9FA8DA",
+  "#7F00FF", // Violet
+  "#4ECDC4", // Cyan
+  "#45B7D1", // Light Blue
+  "#FFC300", // Yellow
+  "#FF6B6B", // Red
+  "#FF69B4", // Pink
+  "#6A5ACD", // Indigo
 ];
 
 export function DashboardOverview({ accounts, transactions }) {
@@ -37,17 +422,14 @@ export function DashboardOverview({ accounts, transactions }) {
     accounts.find((a) => a.isDefault)?.id || accounts[0]?.id
   );
 
-  // Filter transactions for selected account
   const accountTransactions = transactions.filter(
     (t) => t.accountId === selectedAccountId
   );
 
-  // Get recent transactions (last 5)
   const recentTransactions = accountTransactions
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 5);
 
-  // Calculate expense breakdown for current month
   const currentDate = new Date();
   const currentMonthExpenses = accountTransactions.filter((t) => {
     const transactionDate = new Date(t.date);
@@ -58,17 +440,13 @@ export function DashboardOverview({ accounts, transactions }) {
     );
   });
 
-  // Group expenses by category
   const expensesByCategory = currentMonthExpenses.reduce((acc, transaction) => {
     const category = transaction.category;
-    if (!acc[category]) {
-      acc[category] = 0;
-    }
+    if (!acc[category]) acc[category] = 0;
     acc[category] += transaction.amount;
     return acc;
   }, {});
 
-  // Format data for pie chart
   const pieChartData = Object.entries(expensesByCategory).map(
     ([category, amount]) => ({
       name: category,
@@ -77,21 +455,18 @@ export function DashboardOverview({ accounts, transactions }) {
   );
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-6 md:grid-cols-2">
       {/* Recent Transactions Card */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-          <CardTitle className="text-base font-normal">
+      <Card className="bg-gray-800 text-gray-100 shadow-lg rounded-xl border border-gray-700 hover:shadow-xl transition-shadow duration-300">
+        <CardHeader className="flex items-center justify-between pb-4">
+          <CardTitle className="text-base font-semibold text-gray-200">
             Recent Transactions
           </CardTitle>
-          <Select
-            value={selectedAccountId}
-            onValueChange={setSelectedAccountId}
-          >
-            <SelectTrigger className="w-[140px]">
+          <Select value={selectedAccountId} onValueChange={setSelectedAccountId}>
+            <SelectTrigger className="w-[150px] bg-gray-700 text-gray-200 border-gray-600 focus:ring-indigo-500 focus:border-indigo-500">
               <SelectValue placeholder="Select account" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-gray-700 text-gray-100">
               {accounts.map((account) => (
                 <SelectItem key={account.id} value={account.id}>
                   {account.name}
@@ -103,30 +478,30 @@ export function DashboardOverview({ accounts, transactions }) {
         <CardContent>
           <div className="space-y-4">
             {recentTransactions.length === 0 ? (
-              <p className="text-center text-muted-foreground py-4">
+              <p className="text-center text-gray-400 py-4">
                 No recent transactions
               </p>
             ) : (
               recentTransactions.map((transaction) => (
                 <div
                   key={transaction.id}
-                  className="flex items-center justify-between"
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-700 transition-colors"
                 >
                   <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
+                    <p className="text-sm font-medium leading-none text-gray-200">
                       {transaction.description || "Untitled Transaction"}
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs text-gray-400">
                       {format(new Date(transaction.date), "PP")}
                     </p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 font-medium">
                     <div
                       className={cn(
                         "flex items-center",
                         transaction.type === "EXPENSE"
-                          ? "text-red-500"
-                          : "text-green-500"
+                          ? "text-red-400"
+                          : "text-green-400"
                       )}
                     >
                       {transaction.type === "EXPENSE" ? (
@@ -134,7 +509,10 @@ export function DashboardOverview({ accounts, transactions }) {
                       ) : (
                         <ArrowUpRight className="mr-1 h-4 w-4" />
                       )}
-                      ${transaction.amount.toFixed(2)}
+                      {transaction.amount.toLocaleString("en-IN", {
+                        style: "currency",
+                        currency: "INR",
+                      })}
                     </div>
                   </div>
                 </div>
@@ -145,29 +523,33 @@ export function DashboardOverview({ accounts, transactions }) {
       </Card>
 
       {/* Expense Breakdown Card */}
-      <Card>
+      <Card className="bg-gray-800 text-gray-100 shadow-lg rounded-xl border border-gray-700 hover:shadow-xl transition-shadow duration-300">
         <CardHeader>
-          <CardTitle className="text-base font-normal">
+          <CardTitle className="text-base font-semibold text-gray-200">
             Monthly Expense Breakdown
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0 pb-5">
           {pieChartData.length === 0 ? (
-            <p className="text-center text-muted-foreground py-4">
+            <p className="text-center text-gray-400 py-4">
               No expenses this month
             </p>
           ) : (
-            <div className="h-[300px]">
+            <div className="h-[320px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={pieChartData}
                     cx="50%"
                     cy="50%"
-                    outerRadius={80}
-                    fill="#8884d8"
+                    outerRadius={90}
                     dataKey="value"
-                    label={({ name, value }) => `${name}: $${value.toFixed(2)}`}
+                    label={({ name, value }) =>
+                      `${name}: ${value.toLocaleString("en-IN", {
+                        style: "currency",
+                        currency: "INR",
+                      })}`
+                    }
                   >
                     {pieChartData.map((entry, index) => (
                       <Cell
@@ -177,14 +559,20 @@ export function DashboardOverview({ accounts, transactions }) {
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(value) => `$${value.toFixed(2)}`}
+                    formatter={(value) =>
+                      value.toLocaleString("en-IN", {
+                        style: "currency",
+                        currency: "INR",
+                      })
+                    }
                     contentStyle={{
                       backgroundColor: "hsl(var(--popover))",
                       border: "1px solid hsl(var(--border))",
                       borderRadius: "var(--radius)",
+                      color: "#f5f5f5",
                     }}
                   />
-                  <Legend />
+                  <Legend wrapperStyle={{ color: "#f5f5f5" }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>

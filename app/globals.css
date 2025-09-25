@@ -1,15 +1,8 @@
-/* Tailwind v4 core */
 @import "tailwindcss";
-
-/* Plugins */
 @import "tw-animate-css";
 
-/* Dark mode variant */
 @custom-variant dark (&:is(.dark *));
 
-/* ============================
-   THEME VARIABLES
-   ============================ */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -50,9 +43,6 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* ============================
-   ROOT VARIABLES
-   ============================ */
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -88,9 +78,6 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-/* ============================
-   DARK THEME
-   ============================ */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -125,9 +112,6 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-/* ============================
-   BASE STYLES
-   ============================ */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -137,47 +121,41 @@
   }
 }
 
-/* ============================
-   CUSTOM UTILITIES
-   ============================ */
 @layer utilities {
-  /* Gradient background utility */
-  .gradient {
-    background-image: linear-gradient(135deg, #16a34a, #fde68a); /* 135° = to bottom right */
-    background-size: 200% 200%;
-    background-position: center;
-    transition: background-position 0.5s ease;
-  }
-
-  .gradient:hover {
-    background-position: right center; /* subtle hover shift */
-  }
-
-  /* Gradient text utility */
   .gradient-title {
-    background-image: linear-gradient(135deg, #16a34a, #8be974);
-    background-size: 200% 200%;
-    background-position: center;
-    font-weight: 800; /* extra bold */
-    font-size: clamp(2.5rem, 6vw, 3.5rem); /* responsive text size (like text-5xl) */
-    line-height: 1.1;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    transition: background-position 0.5s ease;
+    @apply bg-gradient-to-br from-blue-600 to-purple-600 font-extrabold tracking-tighter pr-2 pb-2 text-transparent bg-clip-text;
   }
 }
 
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
+.hero-image-wrapper {
+  perspective: 1000px;
+}
+
+.hero-image {
+  /* transform: rotateX(20deg) scale(0.9) translateY(-50); */
+  transform: rotateX(15deg) scale(1);
+  transition: transform 0.5s ease-out;
+  will-change: transform;
+}
+
+.hero-image.scrolled {
+  transform: rotateX(0deg) scale(1) translateY(40px);
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 
-.animate-spin-slow {
-  animation: spin-slow 25s linear infinite;
+/* Add this class */
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientMove 3s ease infinite;
 }
