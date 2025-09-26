@@ -172,12 +172,7 @@ export function ReceiptScanner({ onScanComplete }) {
       return;
     }
 
-    try {
-      await scanReceiptFn(file);
-    } catch (error) {
-      toast.error("Failed to scan receipt. Please try again.");
-      console.error(error);
-    }
+    await scanReceiptFn(file);
   };
 
   useEffect(() => {
@@ -185,7 +180,7 @@ export function ReceiptScanner({ onScanComplete }) {
       onScanComplete(scannedData);
       toast.success("Receipt scanned successfully");
     }
-  }, [scanReceiptLoading, scannedData, onScanComplete]);
+  }, [scanReceiptLoading, scannedData]);
 
   return (
     <div className="flex items-center gap-4">
@@ -200,7 +195,6 @@ export function ReceiptScanner({ onScanComplete }) {
           if (file) handleReceiptScan(file);
         }}
       />
-
       <Button
         type="button"
         variant="outline"
