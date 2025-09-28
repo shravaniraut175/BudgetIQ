@@ -1,6 +1,8 @@
+"use server";
+
 import { Resend } from "resend";
 
-export async function sendEmail({ to, subject, html }) {
+export async function sendEmail({ to, subject, react }) {
   const resend = new Resend(process.env.RESEND_API_KEY || "");
 
   try {
@@ -8,7 +10,7 @@ export async function sendEmail({ to, subject, html }) {
       from: "BudgetIQ <onboarding@resend.dev>",
       to,
       subject,
-      html, // <-- pass HTML, not React component
+      react,
     });
 
     return { success: true, data };

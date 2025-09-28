@@ -121,11 +121,7 @@
 //   );
 // }
 
-
-
-
-
-import { Suspense } from "react"; 
+import { Suspense } from "react";
 import { getAccountWithTransactions } from "@/actions/account";
 import { BarLoader } from "react-spinners";
 import { TransactionTable } from "../_components/transaction-table";
@@ -140,13 +136,6 @@ export default async function AccountPage({ params }) {
   }
 
   const { transactions, ...account } = accountData;
-
-  // Format balance in INR
-  const formattedBalance = new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 2,
-  }).format(account.balance);
 
   return (
     <div className="space-y-10 px-6 py-8 bg-gray-900 min-h-screen text-gray-100">
@@ -164,7 +153,7 @@ export default async function AccountPage({ params }) {
 
         <div className="text-right pb-2">
           <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
-            {formattedBalance}
+            ${parseFloat(account.balance).toFixed(2)}
           </div>
           <p className="text-sm text-gray-400">
             {account._count.transactions} Transactions
@@ -191,7 +180,7 @@ export default async function AccountPage({ params }) {
           </div>
         }
       >
-        <TransactionTable transactions={transactions} currency="INR" />
+        <TransactionTable transactions={transactions} />
       </Suspense>
     </div>
   );

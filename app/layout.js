@@ -69,11 +69,7 @@ export default function RootLayout({ children }) {
           {/* Footer */}
           <footer className="bg-gradient-to-r from-indigo-950 via-black to-blue-950 py-8 border-t border-violet-700/30 shadow-lg shadow-indigo-900/40">
             <div className="container mx-auto px-4 text-center">
-              <p className="text-lavender-200 text-sm md:text-base tracking-wide">
-                © {new Date().getFullYear()}{" "}
-                <span className="font-semibold text-violet-400">BudgetIQ</span>. 
-                All rights reserved.
-              </p>
+              <p>&copy; {new Date().getFullYear()} BudgetIQ. All rights reserved.</p>
             </div>
           </footer>
         </body>
