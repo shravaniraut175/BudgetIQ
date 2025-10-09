@@ -1092,8 +1092,8 @@ export function TransactionTable({ transactions, currency = "USD" }) {
     }
   }, [deleted, deleteLoading]);
 
-  const formatCurrency = (amount) =>
-    new Intl.NumberFormat("en-IN", { style: "currency", currency }).format(amount);
+const formatCurrency = (amount) =>
+  new Intl.NumberFormat("en-IN", { style: "currency", currency }).format(amount);
 
   return (
     <div className="space-y-4 text-gray-100">
