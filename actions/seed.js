@@ -2,10 +2,8 @@
 
 import { db } from "@/lib/prisma";
 import { subDays } from "date-fns";
-
-const ACCOUNT_ID = "7178eedf-8d00-4995-9e77-b74040526b99"; //account --> supabase
-const USER_ID = "a429e0d0-37cd-4aab-b7ae-8d4972ba647f"; //user ---> supabase
-
+const USER_ID = "replace-with-valid-user-id";
+const ACCOUNT_ID = "replace-with-valid-account-id";
 // Categories with their typical amount ranges
 const CATEGORIES = {
   INCOME: [
