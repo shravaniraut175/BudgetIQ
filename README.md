@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# BudgetIQ
 
-## Getting Started
+**BudgetIQ** is a full-stack personal finance management platform designed to simplify budgeting, track expenses, and optimize financial decisions using AI-powered insights.
 
-First, run the development server:
+## Features
 
+- **AI Receipt Scan** – Automatically extract and categorize transactions from receipts.  
+- **Manual Transaction Management** – Add, edit, and categorize income and expenses.  
+- **Recurring Transactions** – Schedule and automate regular payments and income entries.  
+- **Dashboard Analytics** – Visualize spending patterns with charts and graphs.  
+- **Secure & Reliable** – Built with modern tech for a seamless and safe experience.  
+- **PWA Ready** – Can be converted into a mobile app for on-the-go financial tracking.
+
+## Tech Stack
+
+- **Frontend:** Next.js, Tailwind CSS  
+- **Backend:** Supabase, Prisma  
+- **AI & APIs:** Gemini API for AI receipt scanning  
+- **Email Notifications:** Resend  
+- **Deployment:** Vercel / Netlify (optional for production)  
+
+## Installation
+
+1. Clone the repository:  
+   ```bash
+   git clone https://github.com/yourusername/BudgetIQ.git
+   cd BudgetIQ
+
+2. Install dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+    npm install
+```
+3. Set up environment variables in a .env file:
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url 
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+GEMINI_API_KEY=your_gemini_api_key
+RESEND_API_KEY=your_resend_api_key
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Run the development server:
+```bash 
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+5. Open http://localhost:3000
+ to view the app.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Usage
 
-To learn more about Next.js, take a look at the following resources:
+- **Add Transaction:** Navigate to `Add Transaction` → choose manual or AI scan → enter details → save.  
+- **Dashboard:** View categorized expenses, income, and financial trends.  
+- **Recurring Transactions:** Set up monthly, weekly, or custom recurring payments.  
+- **Reports:** Download or view transaction summaries for budgeting insights.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Screenshots
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+![System Architecture Diagram](image.png)
+System Architecture Diagram
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+![Landing Page](image-1.png)
+Landing Page
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+![Insight Page](image-2.png)
+Insight Page
+
+
+## License
+
+This project is licensed under the MIT License.
